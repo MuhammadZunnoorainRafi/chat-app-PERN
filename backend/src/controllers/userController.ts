@@ -61,7 +61,6 @@ export const userRegController = async (req: Request, res: Response) => {
 // @desc Login User
 // @route /api/user/login
 // @access PUBLIC
-
 export const userLogController = async (req: Request, res: Response) => {
   const validations = userLogSchema.safeParse(req.body);
 
@@ -101,4 +100,19 @@ export const userLogController = async (req: Request, res: Response) => {
   } finally {
     db.release();
   }
+};
+
+// @desc Velidate Token
+// @route /api/user/validate-token
+// @access PRIVATE
+export const verifyTokenController = async (req: Request, res: Response) => {
+  res.status(200).json({ user: req.user });
+};
+
+// @desc Logout
+// @route /api/user/logout
+// @access PUBLIC
+export const logoutController = async (req: Request, res: Response) => {
+  res.clearCookie('auth_token');
+  res.send();
 };
