@@ -7,7 +7,6 @@ export const userRegSchema = z.object({
 });
 
 export const userLogSchema = z.object({
-  name: z.string().min(1, 'Enter name'),
   email: z.string().min(1, 'Enter email'),
   password: z.string().min(1, 'Enter password'),
 });

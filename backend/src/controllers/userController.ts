@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { userRegSchema } from '../lib/schema';
+import { userLogSchema, userRegSchema } from '../lib/schema';
 import pool from '../lib/db';
 import bcrypt from 'bcryptjs';
 import { genCookieToken } from '../lib/utils';
 
+// @desc Register User
+// @route /api/user/register
+// @access PUBLIC
 export const userRegController = async (req: Request, res: Response) => {
   const validations = userRegSchema.safeParse(req.body);
 
@@ -50,6 +53,51 @@ export const userRegController = async (req: Request, res: Response) => {
     return res
       .status(400)
       .json({ message: 'Something went wrong while Registering user' });
+  } finally {
+    db.release();
+  }
+};
+
+// @desc Login User
+// @route /api/user/login
+// @access PUBLIC
+
+export const userLogController = async (req: Request, res: Response) => {
+  const validations = userLogSchema.safeParse(req.body);
+
+  if (!validations.success) {
+    return res
+      .status(400)
+      .json({ error: validations.error.flatten().fieldErrors });
+  }
+
+  const { email, password } = validations.data;
+
+  const db = await pool.connect();
+  try {
+    const { rows: userExists } = await db.query(
+      `SELECT * FROM users WHERE email = $1`,
+      [email]
+    );
+
+    if (!userExists[0]) {
+      return res.status(400).json({ message: 'User not exists' });
+    }
+
+    if (
+      userExists &&
+      (await bcrypt.compare(password, userExists[0].password))
+    ) {
+      genCookieToken(userExists[0].id, res);
+      res.status(200).json({ user: userExists[0] });
+    } else {
+      return res.status(400).json({ message: 'Invalid Credentials' });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ message: 'Something went wrong while Logging User' });
   } finally {
     db.release();
   }
