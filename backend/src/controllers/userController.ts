@@ -114,5 +114,5 @@ export const verifyTokenController = async (req: Request, res: Response) => {
 // @access PUBLIC
 export const logoutController = async (req: Request, res: Response) => {
   res.clearCookie('auth_token');
-  res.send();
+  res.json({ message: 'User logout' });
 };

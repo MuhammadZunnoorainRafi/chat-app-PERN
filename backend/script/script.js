@@ -12,6 +12,26 @@ const createUserTable = async (db) => {
         )`);
 };
 
+const createConversationTable = async (db) => {
+  await db.query(`CREATE TABLE IF NOT EXISTS conversations(
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    participentsIds TEXT[] NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    )`);
+};
+
+const createMessageTable = async (db) => {
+  await db.query(`CREATE TABLE IF NOT EXISTS messages(
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    conversationId UUID NOT NULL,
+    senderId UUID NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (conversationId) REFERENCES conversations(id),
+    FOREIGN KEY (senderId) REFERENCES users(id) 
+    )`);
+};
+
 const main = async () => {
   const pool = new Pool({
     database: process.env.DATABASE_NAME,
@@ -22,7 +42,10 @@ const main = async () => {
   });
 
   const db = await pool.connect();
+
   await createUserTable(db);
+  await createConversationTable(db);
+  await createMessageTable(db);
 
   db.release();
 };
