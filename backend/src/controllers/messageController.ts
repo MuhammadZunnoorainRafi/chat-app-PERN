@@ -50,7 +50,7 @@ export const sendMessageController = async (req: Request, res: Response) => {
 export const getMessageController = async (req: Request, res: Response) => {
   const { id: userToChatId } = req.params;
   const senderId = req.user.id;
-
+  console.log('LKASJDL');
   const db = await pool.connect();
 
   try {
@@ -58,6 +58,7 @@ export const getMessageController = async (req: Request, res: Response) => {
       `SELECT * FROM conversations WHERE participentsIds @> $1 AND participentsIds <@ $1`,
       [[senderId, userToChatId]]
     );
+
     if (!conversation[0]) {
       return res.status(400).json({ message: 'Conversation not found' });
     }
@@ -67,12 +68,12 @@ export const getMessageController = async (req: Request, res: Response) => {
       [conversation[0].id]
     );
 
-    if (!allMessages[0]) {
-      res.status(200).json([]);
-    }
-
     res.status(200).json(allMessages);
   } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ message: 'Something went wrong while getting messages' });
   } finally {
     db.release();
   }
@@ -81,4 +82,24 @@ export const getMessageController = async (req: Request, res: Response) => {
 export const getUsersForSidebarController = async (
   req: Request,
   res: Response
-) => {};
+) => {
+  const db = await pool.connect();
+
+  try {
+    const authUserId = req.user.id;
+    console.log({ authUserId });
+    const { rows: users } = await db.query(
+      `SELECT * FROM users WHERE id != $1`,
+      [authUserId]
+    );
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      message: 'Something went wrong while getting users for sidebar',
+    });
+  } finally {
+    db.release();
+  }
+};

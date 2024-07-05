@@ -8,7 +8,7 @@ import {
 
 const messageRoute = express.Router();
 
-messageRoute.get('/conservation', protect, getUsersForSidebarController);
+messageRoute.get('/conversation', protect, getUsersForSidebarController);
 messageRoute.get('/:id', protect, getMessageController);
 messageRoute.post('/send/:id', protect, sendMessageController);
 
