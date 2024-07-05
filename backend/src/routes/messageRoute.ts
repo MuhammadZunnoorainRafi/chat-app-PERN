@@ -9,7 +9,7 @@ import {
 const messageRoute = express.Router();
 
 messageRoute.get('/conservation', protect, getUsersForSidebarController);
-messageRoute.post('/:id', protect, getMessageController);
+messageRoute.get('/:id', protect, getMessageController);
 messageRoute.post('/send/:id', protect, sendMessageController);
 
 export default messageRoute;
