@@ -10,6 +10,8 @@ import {
 } from 'react-router-dom';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthContextProvider } from './context/authContext.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,8 +22,16 @@ const router = createBrowserRouter(
   )
 );
 
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false } },
+});
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <AuthContextProvider>
+        <RouterProvider router={router} />
+      </AuthContextProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

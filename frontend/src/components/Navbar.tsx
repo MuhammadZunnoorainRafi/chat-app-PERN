@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '../lib/utils';
 
 function Navbar() {
+  const { isLoggedIn, isLoading, user } = useAuthContext();
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
@@ -8,14 +10,20 @@ function Navbar() {
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
-          <div className="flex items-center gap-2">
-            <Link className="btn btn-primary" to="/register">
-              Register
-            </Link>
-            <Link className="btn btn-secondary" to="/">
-              Login
-            </Link>
-          </div>
+          {isLoading ? (
+            <span className="loading loading-spinner loading-sm"></span>
+          ) : isLoggedIn ? (
+            <button className="btn btn-success">{user.name}</button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link className="btn btn-primary" to="/register">
+                Register
+              </Link>
+              <Link className="btn btn-secondary" to="/">
+                Login
+              </Link>
+            </div>
+          )}
         </ul>
       </div>
     </div>
