@@ -1,0 +1,25 @@
+import { Link } from 'react-router-dom';
+
+function Navbar() {
+  return (
+    <div className="navbar bg-base-100">
+      <div className="flex-1">
+        <button className="btn btn-ghost text-xl">Chat 💬</button>
+      </div>
+      <div className="flex-none">
+        <ul className="menu menu-horizontal px-1">
+          <div className="flex items-center gap-2">
+            <Link className="btn btn-primary" to="/register">
+              Register
+            </Link>
+            <Link className="btn btn-secondary" to="/">
+              Login
+            </Link>
+          </div>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default Navbar;

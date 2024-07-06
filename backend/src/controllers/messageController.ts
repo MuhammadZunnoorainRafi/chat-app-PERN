@@ -50,7 +50,6 @@ export const sendMessageController = async (req: Request, res: Response) => {
 export const getMessageController = async (req: Request, res: Response) => {
   const { id: userToChatId } = req.params;
   const senderId = req.user.id;
-  console.log('LKASJDL');
   const db = await pool.connect();
 
   try {
@@ -87,7 +86,6 @@ export const getUsersForSidebarController = async (
 
   try {
     const authUserId = req.user.id;
-    console.log({ authUserId });
     const { rows: users } = await db.query(
       `SELECT * FROM users WHERE id != $1`,
       [authUserId]
