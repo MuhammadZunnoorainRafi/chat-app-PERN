@@ -1,8 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { userLogSchema, UserLogType } from '../lib/schema';
+import { useLoginUser } from '../actions/auth-actions';
+import { toast } from 'react-toastify';
 
 function Login() {
+  const { loginUser, isPending } = useLoginUser();
   const {
     register,
     handleSubmit,
@@ -12,8 +15,9 @@ function Login() {
     resolver: zodResolver(userLogSchema),
   });
 
-  const formSubmit = (formData: UserLogType) => {
-    console.log(formData);
+  const formSubmit = async (formData: UserLogType) => {
+    await loginUser(formData);
+    // toast.success(`${}`)
     reset();
   };
 
@@ -56,7 +60,11 @@ function Login() {
             </div>
             <div className="form-control mt-6">
               <button type="submit" className="btn btn-primary">
-                Login
+                {isPending ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  'Login'
+                )}
               </button>
             </div>
           </form>

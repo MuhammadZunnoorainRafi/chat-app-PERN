@@ -3,6 +3,7 @@ import { useAuthContext } from '../lib/utils';
 
 function Navbar() {
   const { isLoggedIn, isLoading, user } = useAuthContext();
+  console.log(user.name);
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
