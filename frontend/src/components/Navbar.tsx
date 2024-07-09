@@ -11,8 +11,8 @@ function Navbar() {
   const logoutUserClick = async () => {
     try {
       await logoutUser();
-      navigate(0);
       navigate('/');
+      navigate(0);
     } catch (error) {
       toast.error(errorHandler(error as ErrorT));
     }

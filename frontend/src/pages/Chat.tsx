@@ -1,5 +1,6 @@
 import { useGetConversations } from '../actions/chat-actions';
 import Conversations from '../components/Conversations';
+import UsersChat from '../components/UsersChat';
 
 function Chat() {
   const { conversationData, isLoading } = useGetConversations();
@@ -22,7 +23,9 @@ function Chat() {
           </div>
         )}
       </div>
-      <div className="col-span-3 bg-slate-100">grid-3</div>
+      <div className="col-span-3 bg-slate-100">
+        <UsersChat />
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { ConversationType } from '../context/chatContext';
+import { ConversationType, MessageType } from '../context/chatContext';
+import { useChatContext } from '../lib/utils';
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 export const useGetConversations = () => {
@@ -21,4 +22,22 @@ export const useGetConversations = () => {
   });
 
   return { conversationData, isLoading, error };
+};
+
+export const useGetMessages = () => {
+  const { selectedConversation } = useChatContext();
+  const getMessageRequest = async (): Promise<MessageType[]> => {
+    const res = await axios.get(
+      `${BASE_API_URL}/api/chat/${selectedConversation?.id}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  };
+  const { data: allMessages, isLoading } = useQuery({
+    queryKey: ['messages', selectedConversation?.id],
+    queryFn: getMessageRequest,
+  });
+  return { allMessages, isLoading };
 };

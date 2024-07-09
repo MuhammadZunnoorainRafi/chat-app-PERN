@@ -8,6 +8,7 @@ type Props = {
 function Conversations({ conversation }: Props) {
   const { setSelectedConversation, selectedConversation } = useChatContext();
   const isSelected = conversation.id === selectedConversation?.id;
+
   return (
     <div
       onClick={() => setSelectedConversation(conversation)}
