@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { ConversationType, MessageType } from '../context/chatContext';
 import { useChatContext } from '../lib/utils';
@@ -40,4 +40,26 @@ export const useGetMessages = () => {
     queryFn: getMessageRequest,
   });
   return { allMessages, isLoading };
+};
+
+export const useSendMessages = () => {
+  const { selectedConversation } = useChatContext();
+
+  const queryClient = useQueryClient();
+  const sendMessageRequest = async (message: string) => {
+    await axios.post(
+      `${BASE_API_URL}/api/chat/send/${selectedConversation?.id}`,
+      { message },
+      { withCredentials: true }
+    );
+  };
+
+  const { mutateAsync: sendMessage, isPending } = useMutation({
+    mutationFn: sendMessageRequest,
+    onSuccess: async () =>
+      await queryClient.invalidateQueries({
+        queryKey: ['messages', selectedConversation?.id],
+      }),
+  });
+  return { sendMessage, isPending };
 };

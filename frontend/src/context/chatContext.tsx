@@ -9,7 +9,7 @@ export type ConversationType = {
 export type MessageType = {
   id: string;
   message: string;
-  sender_id: string;
+  senderid: string;
   created_at: Date;
   shouldShake?: boolean;
 };

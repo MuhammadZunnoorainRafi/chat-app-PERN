@@ -3,8 +3,8 @@ import { useAuthContext } from '../lib/utils';
 
 function Message({ message }: { message: MessageType }) {
   const { user } = useAuthContext();
-  const fromMe = user.id === message.sender_id;
-  const date = new Date(message.created_at).toLocaleDateString();
+  const fromMe = user.id === message.senderid;
+  const date = new Date(message.created_at).toLocaleString();
   return (
     <div>
       <h3
