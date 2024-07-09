@@ -102,7 +102,7 @@ export const userLogController = async (req: Request, res: Response) => {
   }
 };
 
-// @desc Velidate Token
+// @desc Validate Token
 // @route /api/user/validate-token
 // @access PRIVATE
 export const verifyTokenController = async (req: Request, res: Response) => {
@@ -114,5 +114,9 @@ export const verifyTokenController = async (req: Request, res: Response) => {
 // @access PUBLIC
 export const logoutController = async (req: Request, res: Response) => {
   res.clearCookie('auth_token');
-  res.json({ message: 'User logout' });
+  res.status(200).json({ success: true });
+  // res.cookie('auth_token', '', {
+  //   expires: new Date(0),
+  // });
+  // res.send();
 };

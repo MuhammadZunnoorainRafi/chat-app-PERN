@@ -1,36 +1,70 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { UserLogType } from '../lib/schema';
-import { errorHandler, ErrorT } from '../lib/utils';
+import { UserLogType, UserRegType } from '../lib/schema';
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+
+export const useRegisterUser = () => {
+  const queryClient = useQueryClient();
+
+  const registerUserRequest = async (formData: UserRegType) => {
+    await axios.post(`${BASE_API_URL}/api/user/register`, formData, {
+      withCredentials: true,
+    });
+  };
+
+  const { mutateAsync: registerUser, isPending } = useMutation({
+    mutationFn: registerUserRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['auth'] });
+    },
+  });
+
+  return {
+    registerUser,
+    isPending,
+  };
+};
 
 export const useLoginUser = () => {
   const queryClient = useQueryClient();
   const loginUserRequest = async (formData: UserLogType) => {
-    const res = await axios.post(`${BASE_API_URL}/api/user/login`, formData, {
+    await axios.post(`${BASE_API_URL}/api/user/login`, formData, {
+      withCredentials: true,
+    });
+  };
+
+  const { mutateAsync: loginUser, isPending } = useMutation({
+    mutationFn: loginUserRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['auth'] });
+    },
+  });
+
+  return {
+    loginUser,
+    isPending,
+  };
+};
+
+export const useLogoutUser = () => {
+  const queryClient = useQueryClient();
+  const logoutRequest = async () => {
+    const res = await axios.post(`${BASE_API_URL}/api/user/logout`, '', {
       withCredentials: true,
     });
     return res.data;
   };
 
-  const { mutateAsync, isPending, isSuccess, isError, error } = useMutation({
-    mutationFn: loginUserRequest,
+  const { mutateAsync: logoutUser } = useMutation({
+    mutationFn: logoutRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['auth'] });
+    },
   });
 
-  if (isError) {
-    toast.error(errorHandler(error));
-  }
-
-  if (isSuccess) {
-    queryClient.invalidateQueries({ queryKey: ['auth'] });
-    toast.success('User logged In');
-  }
-
   return {
-    loginUser: mutateAsync,
-    isPending,
+    logoutUser,
   };
 };
 
@@ -39,7 +73,7 @@ export const useAuthVerify = () => {
     const res = await axios.get(`${BASE_API_URL}/api/user/validate-token`, {
       withCredentials: true,
     });
-    return res.data;
+    return res.data.user;
   };
 
   const {

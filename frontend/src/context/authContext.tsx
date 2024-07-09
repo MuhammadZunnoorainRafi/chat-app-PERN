@@ -17,6 +17,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const { authVerifiedData, isError, isLoading } = useAuthVerify();
+
   return (
     <AuthContext.Provider
       value={{ isLoggedIn: !isError, user: authVerifiedData, isLoading }}

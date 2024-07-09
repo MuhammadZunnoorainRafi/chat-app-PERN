@@ -3,8 +3,13 @@ import { useForm } from 'react-hook-form';
 import { userLogSchema, UserLogType } from '../lib/schema';
 import { useLoginUser } from '../actions/auth-actions';
 import { toast } from 'react-toastify';
+import { errorHandler, ErrorT, useAuthContext } from '../lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function Login() {
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
   const { loginUser, isPending } = useLoginUser();
   const {
     register,
@@ -15,10 +20,21 @@ function Login() {
     resolver: zodResolver(userLogSchema),
   });
 
+  useEffect(() => {
+    if (user) {
+      navigate('/chat');
+    }
+  }, [navigate, user]);
+
   const formSubmit = async (formData: UserLogType) => {
-    await loginUser(formData);
-    // toast.success(`${}`)
-    reset();
+    try {
+      await loginUser(formData);
+      navigate('/chat');
+      reset();
+      toast.success(`User logged In`);
+    } catch (error) {
+      toast.error(errorHandler(error as ErrorT));
+    }
   };
 
   return (
