@@ -21,8 +21,8 @@ function Chat() {
   };
 
   return (
-    <div className="grid grid-cols-4 max-w-5xl mx-auto p-3 bg-white rounded-md h-[70vh] overflow-y-scroll">
-      <div className="col-span-1 bg-slate-300">
+    <div className="grid grid-cols-4 max-w-5xl mx-auto p-3 bg-white rounded-md ">
+      <div className="col-span-1 bg-slate-300 h-fit sticky">
         {isLoading ? (
           <span className="loading loading-spinner loading-sm"></span>
         ) : (
@@ -38,7 +38,7 @@ function Chat() {
           </div>
         )}
       </div>
-      <div className="col-span-3 bg-slate-100 flex flex-col h-full justify-between">
+      <div className="col-span-3 h-[70vh] overflow-y-scroll bg-slate-100 flex flex-col justify-between">
         <div>
           <UsersChat />
         </div>

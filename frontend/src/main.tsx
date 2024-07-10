@@ -16,13 +16,21 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Chat from './pages/Chat.tsx';
 import { ChatContextProvider } from './context/chatContext.tsx';
+import Protect from './components/Protect.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/chat" element={<Chat />} />
+      <Route
+        path="/chat"
+        element={
+          <Protect>
+            <Chat />
+          </Protect>
+        }
+      />
     </Route>
   )
 );
