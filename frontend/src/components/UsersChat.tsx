@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { useGetMessages } from '../actions/chat-actions';
-import { useAuthContext, useChatContext } from '../lib/utils';
+import { useChatContext } from '../lib/utils';
 import Message from './Message';
 
 function UsersChat() {

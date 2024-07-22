@@ -4,8 +4,8 @@ import cors from 'cors';
 import userRoute from './routes/userRoute';
 import cookieParser from 'cookie-parser';
 import messageRoute from './routes/messageRoute';
+import { app, server } from './socket/socket';
 
-const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
@@ -20,4 +20,4 @@ app.get('/', (req, res) => {
   res.json({ message: 'AOA Zunnoorain!' });
 });
 
-app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
+server.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
