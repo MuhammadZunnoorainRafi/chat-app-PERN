@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Chat from './pages/Chat.tsx';
 import { ChatContextProvider } from './context/chatContext.tsx';
 import Protect from './components/Protect.tsx';
+import { SocketContextProvider } from './context/socketContext.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,7 +45,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
         <ChatContextProvider>
-          <RouterProvider router={router} />
+          <SocketContextProvider>
+            <RouterProvider router={router} />
+          </SocketContextProvider>
           <ToastContainer stacked />
         </ChatContextProvider>
       </AuthContextProvider>
