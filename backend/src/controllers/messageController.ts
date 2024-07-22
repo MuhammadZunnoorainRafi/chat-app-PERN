@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../lib/db';
+import { getReceiverSocketId, io } from '../socket/socket';
 
 export const sendMessageController = async (req: Request, res: Response) => {
   const { message } = req.body;
@@ -34,7 +35,11 @@ export const sendMessageController = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Error while sending message' });
     }
 
-    // TODO: Socket.io will go here
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    console.log(receiverSocketId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('newMessages', newMessage.rows[0]);
+    }
 
     res.status(201).json({ message: newMessage.rows[0] });
   } catch (error) {

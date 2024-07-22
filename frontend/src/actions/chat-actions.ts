@@ -25,7 +25,7 @@ export const useGetConversations = () => {
 };
 
 export const useGetMessages = () => {
-  const { selectedConversation } = useChatContext();
+  const { selectedConversation, setMessages, messages } = useChatContext();
   const getMessageRequest = async (): Promise<MessageType[]> => {
     const res = await axios.get(
       `${BASE_API_URL}/api/chat/${selectedConversation?.id}`,
@@ -39,7 +39,10 @@ export const useGetMessages = () => {
     queryKey: ['messages', selectedConversation?.id],
     queryFn: getMessageRequest,
   });
-  return { allMessages, isLoading };
+  if (allMessages) {
+    setMessages(allMessages);
+  }
+  return { messages, isLoading };
 };
 
 export const useSendMessages = () => {
