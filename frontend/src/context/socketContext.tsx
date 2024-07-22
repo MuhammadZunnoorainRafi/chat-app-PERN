@@ -10,21 +10,21 @@ export type TSocketContext = {
 export const SocketContext = createContext<TSocketContext | undefined>(
   undefined
 );
-const socketUrl =
+const socketURL =
   import.meta.env.MODE === 'development' ? 'http://localhost:7000' : '/';
-
 export const SocketContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
   const socketRef = useRef<Socket | null>(null);
+
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const { isLoading, user } = useAuthContext();
+  const { user, isLoading } = useAuthContext();
 
   useEffect(() => {
     if (user && !isLoading) {
-      const socket = io(socketUrl, {
+      const socket = io(socketURL, {
         query: {
           userId: user.id,
         },
@@ -34,6 +34,7 @@ export const SocketContextProvider = ({
       socket.on('getOnlineUsers', (users: string[]) => {
         setOnlineUsers(users);
       });
+
       return () => {
         socket.close();
         socketRef.current = null;
@@ -44,7 +45,7 @@ export const SocketContextProvider = ({
         socketRef.current = null;
       }
     }
-  }, [isLoading, user]);
+  }, [user, isLoading]);
 
   return (
     <SocketContext.Provider value={{ socket: socketRef.current, onlineUsers }}>
